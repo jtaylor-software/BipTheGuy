@@ -10,28 +10,35 @@ import AVFAudio
 
 struct ContentView: View {
   @State private var audioPlayer: AVAudioPlayer!
+  @State private var isFullSize = true
   
-    var body: some View {
-        VStack {
-          Spacer()
-            Image("clown")
-            .resizable()
-            .scaledToFit()
-            .onTapGesture {
-              playsound(soundName: "punchSound")
-            }
-              
-          Spacer()
-          
-          Button {
-            
-          } label: {
-            Label("Photo Library", systemImage: "photo.fill.on.rectangle.fill")
+  var body: some View {
+    VStack {
+      Spacer()
+      Image("clown")
+        .resizable()
+        .scaledToFit()
+        .scaleEffect(isFullSize ? 1.0 : 0.9)
+        .onTapGesture {
+          playsound(soundName: "punchSound")
+          isFullSize = false // will immediately shrink using .scaleEffect to 90% of size
+          withAnimation (.spring(response: 0.3, dampingFraction: 0.3)) {
+            isFullSize = true // will go from 90% to 100% size but using the .spring animation
           }
-
         }
-        .padding()
+      
+      
+      Spacer()
+      
+      Button {
+        
+      } label: {
+        Label("Photo Library", systemImage: "photo.fill.on.rectangle.fill")
+      }
+      
     }
+    .padding()
+  }
   
   func playsound(soundName: String) {
     if audioPlayer != nil && audioPlayer.isPlaying {
@@ -51,5 +58,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+  ContentView()
 }
